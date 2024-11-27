@@ -7,8 +7,8 @@
     </div>
     <div class="dashboard-midden" ref="container"></div>
     <div class="dashboard-right">
-      <widget05></widget05>
-      <widget04></widget04>
+      <widget05 @startInspect="startInspect" @stopInspect="stopInspect" />
+      <widget04 />
     </div>
   </div>
 </template>
@@ -18,9 +18,8 @@ import widget02 from './widgets/widget02/index.vue'
 import widget03 from './widgets/widget03/index.vue'
 import widget04 from './widgets/widget04/index.vue'
 import widget05 from './widgets/widget05/index.vue'
-import { useThree } from './hooks/useThree'
-import { reactive } from 'vue'
-const { container, scene } = useThree()
+import { useStation } from './hooks/useThree'
+const { container, startInspect, stopInspect } = useStation()
 </script>
 <style lang="scss" scoped>
 .dashboard {
