@@ -1,11 +1,13 @@
 <template>
   <WidgetPanel title="变电站操作台">
     <div class="item-list">
-      <div class="item">模拟设备告警</div>
-      <div class="item">推送告警</div>
+      <div class="item" @click="toggleWarming">
+        {{ state.warming ? '取消告警模拟' : '模拟设备告警' }}
+      </div>
       <div class="item" @click="toggleInspect">
         {{ state.inspecting ? '取消漫游' : '漫游巡检' }}
       </div>
+      <div class="item">推送告警</div>
       <div class="item">实时监控</div>
     </div>
   </WidgetPanel>
@@ -15,16 +17,33 @@ import WidgetPanel from '../widgetPanel.vue'
 import { reactive } from 'vue'
 const state = reactive({
   inspecting: false,
+  warming: false,
 })
-const emit = defineEmits(['startInspect', 'stopInspect'])
+const emit = defineEmits([
+  'startInspect',
+  'stopInspect',
+  'startWarming',
+  'stopWarming',
+])
 
 const toggleInspect = () => {
   if (state.inspecting) {
     emit('stopInspect')
   } else {
-    emit('startInspect')
+    emit('startInspect', () => {
+      state.inspecting = false
+    })
   }
   state.inspecting = !state.inspecting
+}
+
+const toggleWarming = () => {
+  if (state.warming) {
+    emit('stopWarming')
+  } else {
+    emit('startWarming')
+  }
+  state.warming = !state.warming
 }
 </script>
 

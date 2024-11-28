@@ -18,6 +18,12 @@ import { isFunction } from 'lodash'
 import TWEEN from 'three/examples/jsm/libs/tween.module.js'
 import Label from '../components/label.vue'
 import * as THREE from 'three'
+import * as _ from 'lodash'
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass'
 
 function useThree() {
   const container = ref<HTMLElement>()
@@ -30,7 +36,6 @@ function useThree() {
   const mixers: any = []
   const clock = new THREE.Clock()
   const renderMixins = new Map()
-
   const animate = () => {
     const delta = new THREE.Clock().getDelta()
     renderer.value!.render(scene.value!, camera.value!)
@@ -60,7 +65,7 @@ function useThree() {
     renderer.value.shadowMap.enabled = false
     renderer.value.outputEncoding = THREE.sRGBEncoding
     renderer.value.setSize(clientWidth, clientHeight)
-    // renderer.value.setClearAlpha(0.5)
+    renderer.value.setClearAlpha(0.5)
     container.value!.appendChild(renderer.value.domElement)
     //CssRenderer
     cssRenderer.value = new CSS2DRenderer()
@@ -78,13 +83,42 @@ function useThree() {
     controls.value.dampingFactor = 0.1
     controls.value.target.set(0, 5, 0)
     controls.value.maxPolarAngle = Math.PI / 2
-    controls.value.minDistance = 10 // 设置最小缩放距离
-    controls.value.maxDistance = 100 // 设置最大缩放距离
+    controls.value.minDistance = 10
+    controls.value.maxDistance = 100
     controls.value.update()
 
     //Lights
     const ambientLight = new THREE.AmbientLight(0x999999, 10)
     scene.value.add(ambientLight)
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5) // 从正上方（不是位置）照射过来的平行光，0.7的强度
+    directionalLight.position.set(20, 20, 20)
+    directionalLight.position.multiplyScalar(1)
+    directionalLight.castShadow = true
+    directionalLight.shadow.mapSize = new THREE.Vector2(1024, 1024)
+    // scene.value.add(new THREE.DirectionalLightHelper(directionalLight, 5))
+    scene.value.add(directionalLight)
+
+    //composer
+    // const composer = new EffectComposer(renderer.value)
+    // const renderPass = new RenderPass(scene.value, camera.value)
+    // composer.addPass(renderPass)
+    // outlinePass.value = new OutlinePass(
+    //   new THREE.Vector2(window.innerWidth, window.innerHeight),
+    //   scene.value,
+    //   camera.value
+    // )
+    // outlinePass.value.edgeStrength = 20.0 // 边框的亮度
+    // outlinePass.value.edgeGlow = 1 // 光晕[0,1]
+    // outlinePass.value.usePatternTexture = false // 是否使用父级的材质
+    // outlinePass.value.edgeThickness = 10.0 // 边框宽度
+    // outlinePass.value.downSampleRatio = 1 // 边框弯曲度
+    // outlinePass.value.pulsePeriod = 1 // 呼吸闪烁的速度
+    // outlinePass.value.visibleEdgeColor.set('#f20c00') // 呼吸显示的颜色
+    // outlinePass.value.hiddenEdgeColor = new THREE.Color(0, 0, 0) // 呼吸消失的颜色
+    // outlinePass.value.clear = true
+    // composer.addPass(outlinePass.value)
+    // composers.set('outline', composer)
   }
 
   const dracoLoader = new DRACOLoader()
@@ -123,6 +157,9 @@ export function useStation() {
   const { container, scene, camera, controls, loadGltf, renderMixins } =
     useThree()
 
+  const devices = []
+  let currentWarming
+
   const loadBaseModel = async () => {
     const glb = await loadGltf('/models/base.glb')
     scene.value.add(glb.scene)
@@ -145,7 +182,23 @@ export function useStation() {
 
   const loadDeviceModel = async () => {
     const obj = await loadGltf('/models/devices.glb')
+    devices.push(...obj.scene.children[4].children)
+
     scene.value.add(obj.scene)
+
+    const handler = (event: MouseEvent) => {
+      // const el = container.value as HTMLElement
+      const mouse = new THREE.Vector2(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1
+      )
+      const raycaster = new THREE.Raycaster()
+      raycaster.setFromCamera(mouse, camera.value!)
+      const intersects = raycaster.intersectObject(scene.value!, true)
+      console.log('intersects', intersects)
+    }
+    document.addEventListener('click', handler)
+
     const obj2 = await loadGltf('/models/lines.gltf')
     scene.value.add(obj2.scene)
     //添加设备label
@@ -256,8 +309,46 @@ export function useStation() {
     return tween
   }
 
-  let tweenA
-  const startInspect = () => {
+  const moveCamera = (oldP, oldT, newP, newT, callback) => {
+    let tween = new TWEEN.Tween({
+      x1: oldP.x,
+      y1: oldP.y,
+      z1: oldP.z,
+      x2: oldT.x,
+      y2: oldT.y,
+      z2: oldT.z,
+    })
+    tween.to(
+      {
+        x1: newP.x,
+        y1: newP.y,
+        z1: newP.z,
+        x2: newT.x,
+        y2: newT.y,
+        z2: newT.z,
+      },
+      1000
+    )
+    // 每一帧执行函数 、这个地方就是核心了、每变一帧跟新一次页面元素
+    tween.onUpdate((object) => {
+      camera.value.position.set(object.x1, object.y1, object.z1)
+      controls.value.target.x = object.x2
+      controls.value.target.y = object.y2
+      controls.value.target.z = object.z2
+      controls.value.update()
+    })
+
+    // 动画完成后的执行函数
+    tween.onComplete(() => {
+      controls.value.enabled = true
+      callback && callback()
+    })
+
+    tween.easing(TWEEN.Easing.Cubic.InOut)
+    tween.start()
+  }
+  let inspectTween
+  const startInspect = (callback) => {
     const positions = [
       {
         x1: -47.46,
@@ -348,7 +439,12 @@ export function useStation() {
       y2: controls.value.target.y,
       z2: controls.value.target.z,
     }
-    tweenA = cameraTween(current, positions[0], 2000, TWEEN.Easing.Linear.None)
+    inspectTween = cameraTween(
+      current,
+      positions[0],
+      2000,
+      TWEEN.Easing.Linear.None
+    )
     // 漫游点B
     const tweenB = cameraTween(
       current,
@@ -415,7 +511,7 @@ export function useStation() {
       2000,
       TWEEN.Easing.Quadratic.InOut
     )
-    tweenA.chain(tweenB)
+    inspectTween.chain(tweenB)
     tweenB.chain(tweenC)
     tweenC.chain(tweenD)
     tweenD.chain(tweenE)
@@ -424,15 +520,14 @@ export function useStation() {
     tweenG.chain(tweenH)
     tweenH.chain(tweenI)
     tweenI.chain(tweenJ)
-    tweenA.start()
-    // stopInspect = () => {
-    //   tweenA.stop()
-    //   cameraTween(current, positions[9], 2000, TWEEN.Easing.Linear.None).start()
-    // }
+    inspectTween.start()
+    tweenJ.onComplete(() => {
+      callback && callback()
+    })
   }
 
   const stopInspect = () => {
-    tweenA.stop()
+    inspectTween.stop()
     const current = {
       x1: camera.value.position.x,
       y1: camera.value.position.y,
@@ -456,14 +551,88 @@ export function useStation() {
     ).start()
   }
 
+  let warmingTimer
+  const startWarming = () => {
+    warmingTimer = setInterval(() => {
+      if (currentWarming) {
+        currentWarming.traverse((mesh) => {
+          if (!(mesh instanceof THREE.Mesh)) return undefined
+          mesh.material.emissive.setHex(mesh.currentHex)
+          return undefined
+        })
+      }
+      const index = _.sample([0, 1, 2, 3, 4, 5])
+
+      currentWarming = devices[index]
+
+      moveCamera(
+        camera.value.position,
+        controls.value.target,
+        {
+          x: -31 + 12 * index,
+          y: 2 + 20,
+          z: -7 + 20,
+        },
+        {
+          x: -31 + 12 * index,
+          y: 0,
+          z: -7,
+        },
+        () => {}
+      )
+      currentWarming.traverse((mesh) => {
+        if (!(mesh instanceof THREE.Mesh)) return undefined
+        mesh.material = mesh.material.clone()
+        mesh.currentHex = mesh.currentHex ?? mesh.material.emissive.getHex()
+        mesh.material.emissive.setHex(0xff0000)
+        return undefined
+      })
+    }, 2000)
+  }
+
+  const stopWarming = () => {
+    if (currentWarming) {
+      currentWarming.traverse((mesh) => {
+        if (!(mesh instanceof THREE.Mesh)) return undefined
+        mesh.material.emissive.setHex(mesh.currentHex)
+        return undefined
+      })
+    }
+    window.clearInterval(warmingTimer)
+    cameraTween(
+      {
+        x1: camera.value.position.x,
+        y1: camera.value.position.y,
+        z1: camera.value.position.z,
+        x2: controls.value.target.x,
+        y2: controls.value.target.y,
+        z2: controls.value.target.z,
+      },
+      {
+        x1: 20,
+        y1: 15,
+        z1: 20,
+        x2: 0,
+        y2: 5,
+        z2: 0,
+      },
+      2000,
+      TWEEN.Easing.Linear.None
+    ).start()
+  }
+
   onMounted(() => {
     loadBaseModel()
     loadDeviceModel()
+
+    // onUnmounted(() => document.removeEventListener('click', handler))
   })
   return {
     container,
     startInspect,
     stopInspect,
+    startWarming,
+    stopWarming,
   }
 }
 

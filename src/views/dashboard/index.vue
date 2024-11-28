@@ -7,7 +7,12 @@
     </div>
     <div class="dashboard-midden" ref="container"></div>
     <div class="dashboard-right">
-      <widget05 @startInspect="startInspect" @stopInspect="stopInspect" />
+      <widget05
+        @startInspect="startInspect"
+        @stopInspect="stopInspect"
+        @startWarming="startWarming"
+        @stopWarming="stopWarming"
+      />
       <widget04 />
     </div>
   </div>
@@ -19,7 +24,8 @@ import widget03 from './widgets/widget03/index.vue'
 import widget04 from './widgets/widget04/index.vue'
 import widget05 from './widgets/widget05/index.vue'
 import { useStation } from './hooks/useThree'
-const { container, startInspect, stopInspect } = useStation()
+const { container, startInspect, stopInspect, startWarming, stopWarming } =
+  useStation()
 </script>
 <style lang="scss" scoped>
 .dashboard {
@@ -50,6 +56,7 @@ const { container, startInspect, stopInspect } = useStation()
       top: 0;
       left: 0;
       z-index: 2;
+      z-index: 99;
       width: 100%;
       height: 100%;
       pointer-events: none;
