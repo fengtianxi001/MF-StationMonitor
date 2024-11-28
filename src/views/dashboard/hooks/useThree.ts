@@ -122,7 +122,9 @@ function useThree() {
   }
 
   const dracoLoader = new DRACOLoader()
-  dracoLoader.setDecoderPath('/js/draco/gltf/')
+  dracoLoader.setDecoderPath(
+    `${import.meta.env.VITE_API_DOMAIN}/js/draco/gltf/`
+  )
   dracoLoader.setDecoderConfig({ type: 'js' })
 
   const loadGltf = (url: string): Promise<GLTF> => {
