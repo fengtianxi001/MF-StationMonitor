@@ -161,7 +161,9 @@ export function useStation() {
   let currentWarming
 
   const loadBaseModel = async () => {
-    const glb = await loadGltf('/models/base.glb')
+    const glb = await loadGltf(
+      `${import.meta.env.VITE_API_DOMAIN}/models/base.glb`
+    )
     scene.value.add(glb.scene)
     //箭头动画
     const textures = []
@@ -181,25 +183,29 @@ export function useStation() {
   }
 
   const loadDeviceModel = async () => {
-    const obj = await loadGltf('/models/devices.glb')
+    const obj = await loadGltf(
+      `${import.meta.env.VITE_API_DOMAIN}/models/devices.glb`
+    )
     devices.push(...obj.scene.children[4].children)
 
     scene.value.add(obj.scene)
 
-    const handler = (event: MouseEvent) => {
-      // const el = container.value as HTMLElement
-      const mouse = new THREE.Vector2(
-        (event.clientX / window.innerWidth) * 2 - 1,
-        -(event.clientY / window.innerHeight) * 2 + 1
-      )
-      const raycaster = new THREE.Raycaster()
-      raycaster.setFromCamera(mouse, camera.value!)
-      const intersects = raycaster.intersectObject(scene.value!, true)
-      console.log('intersects', intersects)
-    }
-    document.addEventListener('click', handler)
+    // const handler = (event: MouseEvent) => {
+    //   // const el = container.value as HTMLElement
+    //   const mouse = new THREE.Vector2(
+    //     (event.clientX / window.innerWidth) * 2 - 1,
+    //     -(event.clientY / window.innerHeight) * 2 + 1
+    //   )
+    //   const raycaster = new THREE.Raycaster()
+    //   raycaster.setFromCamera(mouse, camera.value!)
+    //   const intersects = raycaster.intersectObject(scene.value!, true)
+    //   console.log('intersects', intersects)
+    // }
+    // document.addEventListener('click', handler)
 
-    const obj2 = await loadGltf('/models/lines.gltf')
+    const obj2 = await loadGltf(
+      `${import.meta.env.VITE_API_DOMAIN}/models/lines.gltf`
+    )
     scene.value.add(obj2.scene)
     //添加设备label
     const componentRender = (component: any, props: any) => {

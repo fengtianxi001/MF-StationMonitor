@@ -1,16 +1,16 @@
 @font-face {
   font-family: SarasaMonoTSCBoldItalic;
-  src: url(/fonts/SarasaMonoTSCBoldItalic.woff2);
+  src: url(../fonts/SarasaMonoTSCBoldItalic.woff2);
   font-weight: normal;
 }
 
 @font-face {
   font-family: Furore;
-  src: url(/fonts/Furore.woff2);
+  src: url(../fonts/Furore.woff2);
 }
 @font-face {
   font-family: DsDigital;
-  src: url(/fonts/DsDigital.TTF);
+  src: url(../fonts/DsDigital.TTF);
 }
 
 * {

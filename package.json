@@ -1,5 +1,5 @@
 {
-  "name": "bridge",
+  "name": "mf-stationmonitor",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.54.3",
-    "@pansy/watermark": "^2.3.0",
     "@tweenjs/tween.js": "19.0.0",
     "@vueuse/core": "^10.11.0",
     "animate.css": "^4.1.1",
@@ -25,13 +24,8 @@
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
     "gsap": "^3.12.5",
-    "js-cookie": "^3.0.5",
-    "js-md5": "^0.8.3",
-    "konva": "^9.3.6",
-    "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
-    "pinyin-match": "^1.2.5",
     "three": "^0.170.0",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"

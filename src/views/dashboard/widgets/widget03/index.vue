@@ -7,7 +7,7 @@
 import WidgetPanel from '../widgetPanel.vue'
 import { nextTick, onMounted } from 'vue'
 import { map, max, min, sampleSize, range } from 'lodash'
-import useEcharts from '@/hooks/useEcharts'
+import useEcharts from '../../hooks/useEcharts'
 
 const { container, echarts, setOption } = useEcharts()
 

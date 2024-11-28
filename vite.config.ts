@@ -5,6 +5,10 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import stylelintPlugin from 'vite-plugin-stylelint'
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
+  build: {
+    outDir: './docs',
+  },
   plugins: [vue(), vueJsx(), stylelintPlugin({ fix: true })],
   resolve: {
     alias: {
