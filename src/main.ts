@@ -1,11 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import { setupRouter } from '@/router'
 import autofit from 'autofit.js'
 
 const boostrap = async () => {
   const app = createApp(App)
-  setupRouter(app)
   app.mount('#app')
 
   const ScreenSize = {

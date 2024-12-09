@@ -15,27 +15,19 @@
     "prettier:format": "prettier --config .prettierrc.cjs  --ext .js,.vue,jsx,ts,tsx src --write"
   },
   "dependencies": {
-    "@arco-design/web-vue": "^2.54.3",
     "@tweenjs/tween.js": "19.0.0",
-    "@vueuse/core": "^10.11.0",
     "animate.css": "^4.1.1",
     "autofit.js": "^3.0.7",
-    "axios": "^1.6.7",
-    "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
     "gsap": "^3.12.5",
     "lodash": "^4.17.21",
-    "nprogress": "^0.2.0",
     "three": "^0.170.0",
-    "vue": "^3.3.11",
-    "vue-router": "^4.2.5"
+    "vue": "^3.3.11"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
-    "@types/leaflet": "^1.9.8",
     "@types/lodash": "^4.14.202",
     "@types/node": "^18.19.3",
-    "@types/nprogress": "^0.2.3",
     "@vitejs/plugin-vue": "^4.5.2",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/tsconfig": "^0.5.0",
@@ -46,7 +38,6 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.11.0",
-    "less": "^4.2.0",
     "npm-run-all2": "^6.1.1",
     "postcss": "^8.4.23",
     "postcss-html": "^1.5.0",

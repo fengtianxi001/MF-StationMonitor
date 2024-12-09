@@ -12,38 +12,29 @@
   font-family: DsDigital;
   src: url(../fonts/DsDigital.TTF);
 }
+@font-face {
+  font-family: DouYu;
+  src: url(../fonts/DouYu.woff);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: PangMenZhengDaoBiaoTiTiMianFeiBan;
+  src: url(../fonts/PangMenZhengDaoBiaoTiTiMianFeiBan.woff);
+  font-weight: normal;
+}
 
 * {
   padding: 0;
   margin: 0;
   list-style: none;
-  font-family: SarasaMonoTSCBoldItalic;
-}
-
-body {
-  background-color: var(--color-bg-1);
-}
-
-body[arco-theme='dark'] .leaflet-layer {
-  filter: grayscale(100) invert(100);
-}
-
-.leaflet-div-icon {
-  background: transparent !important;
-  border: unset !important;
 }
 
 #app {
   width: 100%;
   height: 100%;
-  /* font-family: Oppo; */
   overflow: hidden;
-}
-
-.marker-cluster div {
-  font-size: 16px !important;
-  font-weight: bold !important;
-  color: #fff !important;
+  font-family: SarasaMonoTSCBoldItalic;
 }
 
 .app-loading {
