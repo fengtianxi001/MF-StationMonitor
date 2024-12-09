@@ -37,6 +37,15 @@
     transform: translateX(-100%);
   }
 }
+@keyframes light-go {
+  from {
+    left: 500px;
+  }
+  to {
+    left: 1100px;
+    opacity: 0;
+  }
+}
 .layout-header {
   position: relative;
   display: flex;
@@ -47,13 +56,27 @@
   background-repeat: no-repeat;
   background-position: center top;
   background-size: 100% 100%;
+  &::after {
+    position: absolute;
+    bottom: -55px;
+    left: 500px;
+    width: 100%;
+    width: 500px;
+    height: 100px;
+    content: '';
+    background-image: url(@/assets/light_bg.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: light-go 3s ease-in-out infinite forwards;
+  }
   .header-midden {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
     height: 100%;
+    overflow-x: hidden;
     font-family: DouYu;
     color: #fff;
     .cn {
@@ -62,8 +85,6 @@
     }
     .en {
       position: relative;
-
-      // top: -6px;
       font-size: 10px;
       @include font-color;
     }
