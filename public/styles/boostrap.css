@@ -10,11 +10,11 @@
 }
 @font-face {
   font-family: DsDigital;
-  src: url(../fonts/DsDigital.TTF);
+  src: url(../fonts/DsDigital.woff2);
 }
 @font-face {
   font-family: DouYu;
-  src: url(../fonts/DouYu.woff);
+  src: url(../fonts/DouYu.woff2);
   font-weight: normal;
 }
 

@@ -6,7 +6,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { isFunction } from 'lodash'
 import TWEEN from 'three/examples/jsm/libs/tween.module.js'
 import * as THREE from 'three'
-import * as _ from 'lodash'
+// import * as _ from 'lodash'
 
 export function useThree() {
   const container = ref<HTMLElement>()

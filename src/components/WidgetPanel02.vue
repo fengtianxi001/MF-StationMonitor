@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import LayoutPanel from './LayoutPanel.vue'
 import { nextTick, onMounted } from 'vue'
-import { map, max, min, sampleSize, range } from 'lodash'
+import { sampleSize, range } from 'lodash'
 import useEcharts from '@/hooks/useEcharts'
 
 const { container, echarts, setOption } = useEcharts()

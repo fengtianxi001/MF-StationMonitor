@@ -48,5 +48,6 @@
     "**/pnpm-lock.yaml": true,
     "**/package.json": true
   },
-  "vue.codeActions.enabled": false
+  "vue.codeActions.enabled": false,
+  "liveServer.settings.port": 5501
 }

@@ -12,7 +12,7 @@ import {
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import TWEEN from 'three/examples/jsm/libs/tween.module.js'
 import * as THREE from 'three'
-import * as _ from 'lodash'
+import { sample } from 'lodash'
 import useThree from './useThree'
 import WidgetLabel from '@/components/WidgetLabel.vue'
 
@@ -492,7 +492,7 @@ export function useStation() {
           return undefined
         })
       }
-      const index = _.sample([0, 1, 2, 3, 4, 5])
+      const index = sample([0, 1, 2, 3, 4, 5])
       warmingCurrent.value = devices.value[index]
 
       cameraAnimation(
